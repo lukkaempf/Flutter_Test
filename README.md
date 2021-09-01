@@ -1,6 +1,7 @@
 # testapp
 
-A new Flutter project.
+A new Flutter Test project with Flask Backend
+Fetch from the Frontend to Backend with http Requests.
 
 ## Getting Started
 
