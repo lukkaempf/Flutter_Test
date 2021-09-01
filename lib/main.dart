@@ -1,3 +1,6 @@
+import 'dart:html';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -129,8 +132,8 @@ class _HomeState extends State<Home> {
       print(_username);
       print(_password);
       Map map = {'username': _username, 'password': _password};
-
-      login(map);
+      test();
+      //login(map);
     }
   }
 }
@@ -141,3 +144,17 @@ Future<void> login(Map listdata) async {
   var result = await http.post(url, body: listdata);
   print(result.body);
 }
+
+Future<void> test() async {
+  var url = Uri.parse('http://localhost:5000/api/test');
+
+  final token = 'WIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikpv';
+  //+final headers = {HttpHeaders.authorizationHeader: token};
+
+  var result =
+      await http.get(url, headers: {HttpHeaders.authorizationHeader: token});
+  //print(result);
+}
+
+//HttpHeaders.authorizationHeader:
+      
