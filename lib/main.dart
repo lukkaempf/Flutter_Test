@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
+import 'package:testapp/sign_up.dart';
+
 final storage = FlutterSecureStorage();
 
 void main() {
@@ -35,7 +37,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Home(),
-      routes: {'home': (context) => Home(), 'login': (context) => Login()},
+      routes: {
+        'home': (context) => Home(),
+        'login': (context) => Login(),
+        'signup': (context) => Signup()
+      },
     );
   }
 }
@@ -89,15 +95,15 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+Color maincolor = Color(0xffe9e9e9);
+Color shadowcolor = Color.fromRGBO(0, 0, 0, .3);
+
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   String _username = '';
   String _password = '';
   String? errorMessage = '';
   bool _isObscure = true;
-
-  Color maincolor = Color(0xffe9e9e9);
-  Color shadowcolor = Color.fromRGBO(0, 0, 0, .3);
 
   @override
   Widget build(BuildContext context) {
@@ -188,9 +194,14 @@ class _LoginState extends State<Login> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, 'signup');
+                        },
+                        child: Text('Noch kein Konto? Jetzt Registieren')),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
+                      child: ElevatedButton(
                         onPressed: () async {
                           errorMessage = '';
                           _formKey.currentState!.save();
@@ -203,23 +214,18 @@ class _LoginState extends State<Login> {
                           setState(() {
                             errorMessage = data['message'];
                           });
-
-                          /* foo(map);
-                            FutureBuilder(
-                                future: user,
-                                builder: (context, snapshot) {
-                                  print(snapshot.data);
-                                  if (snapshot.hasData) {
-                                    print('df');
-                                    return Text('err');
-                                  } else {
-                                    return Text('test');
-                                  }
-                                }); */
                         },
                         child: Text('Sign in'),
+                        style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(10),
+                            shadowColor:
+                                MaterialStateProperty.all(Colors.black),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)))),
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
@@ -232,20 +238,17 @@ class _LoginState extends State<Login> {
 }
 
 login(context, data) async {
-  //context, String username, String password, final formKey
   var url = Uri.parse('http://10.0.2.2:5000/api/login');
   var result = await http.post(url, body: data);
   if (result.statusCode != 200) {
     return json.decode(result.body);
   }
-
   //String? value = await storage.read(key: 'token');
-
-  test(context, result);
+  writeToken(context, result);
   return json.decode(result.body);
 }
 
-test(context, result) async {
+writeToken(context, result) async {
   Map<String, dynamic> resultToJson = json.decode(result.body);
   await storage.write(key: 'token', value: resultToJson['token']);
   Navigator.pushReplacementNamed(context, 'home');
