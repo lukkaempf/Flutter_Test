@@ -59,6 +59,13 @@ def home():
         left_handed=True
     )
 
+@views.route('/api/signup', methods=['GET','POST'])
+def signup():
+    if request.method == 'POST':
+        requestdata = (request.form).to_dict(flat=False)
+        return jsonify({'test'})
+    return jsonify({'test'})
+
 @views.route('/api/test/')
 @token_required
 def test(current_user):
