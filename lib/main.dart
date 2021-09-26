@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
 import 'package:testapp/sign_up.dart';
+import 'package:testapp/utilis/services/api_service.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> {
             heroTag: '1',
           ),
           FloatingActionButton(
-            onPressed: () => test1(),
+            onPressed: () => testGetData(),
             child: Text('Test'),
             heroTag: '2',
           )
@@ -252,19 +253,4 @@ writeToken(context, result) async {
   Map<String, dynamic> resultToJson = json.decode(result.body);
   await storage.write(key: 'token', value: resultToJson['token']);
   Navigator.pushReplacementNamed(context, 'home');
-}
-
-Future<String> test1() async {
-  var url = Uri.parse('http://10.0.2.2:5000/api/test/');
-
-  //final token =
-  //  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwNzE1MjU3fQ.iY-_UBE2NxlG5MTTtydWW01m1TGBOnMIGZfwG80Kjik';
-  final token = await storage.read(key: 'token');
-
-  var result = await http.get(url, headers: {
-    'x-access-token': token.toString(),
-    'Content-type': 'application/json'
-  });
-  print(result.body);
-  return result.body.toString();
 }

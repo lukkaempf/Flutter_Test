@@ -62,9 +62,20 @@ def home():
 @views.route('/api/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
-        requestdata = (request.form).to_dict(flat=False)
-        return jsonify({'test'})
-    return jsonify({'test'})
+        requestdata = request.form.getlist
+        if not requestdata('Passwort') == requestdata('Passwort2'):
+            print('error')
+            return jsonify({'message':'Passwörter stimmen nicht überein'})
+
+        isuserexisting = db.session.query(Users).filter(Users.username==requestdata('Benutzername')).first()
+        if not isuserexisting:
+            return jsonify({'message':'Benutzer existiert nicht'})
+            #newuser = Users(username, email, firstname, name, password)
+
+        ##### Noch erstellen das wenn Anfrage leer ist error
+            
+        return jsonify({'message':'Benutzername bereits vergeben'})
+    return jsonify({'message':'test'})
 
 @views.route('/api/test/')
 @token_required
