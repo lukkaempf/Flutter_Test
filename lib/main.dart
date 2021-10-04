@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
-import 'package:testapp/sign_up.dart';
-import 'package:testapp/utilis/services/api_service.dart';
+import 'package:testapp/pages/signup/sign_up.dart';
+import 'package:testapp/pages/home/home.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -43,50 +43,6 @@ class MyApp extends StatelessWidget {
         'login': (context) => Login(),
         'signup': (context) => Signup()
       },
-    );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    super.initState();
-    loginRequired(context);
-  }
-
-/*   @override
-  void dispose() {
-    super.dispose();
-  } */
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(
-        title: new Text('test'),
-      ),
-      body: Center(
-          child: Column(
-        children: [
-          FloatingActionButton(
-            onPressed: () => logout(context),
-            child: Text('Abmelden'),
-            heroTag: '1',
-          ),
-          FloatingActionButton(
-            onPressed: () => testGetData(),
-            child: Text('Test'),
-            heroTag: '2',
-          )
-        ],
-      )),
     );
   }
 }

@@ -44,7 +44,7 @@ def home():
         username = ''.join(requestdata['username'])
         passwort = ''.join(requestdata['password'])
         print(username)
-        if not username and not passwort:
+        if not username or not passwort:
             return jsonify({'message':'Geben Sie eine Email and Passwort ein.'}), 403
         
         user = db.session.query(Users).filter(Users.username==username).first()
@@ -63,19 +63,32 @@ def home():
 def signup():
     if request.method == 'POST':
         requestdata = request.form.getlist
+
+        firstname=''.join(requestdata('Vorname'))
+        name=''.join(requestdata('Name'))
+        email=''.join(requestdata('Mail'))
+        username=''.join(requestdata('Benutzername'))
+        password=''.join(requestdata('Passwort'))
+        password2=''.join(requestdata('Passwort2'))
+
+        if not firstname or not name or not email or not username or not password or not password2:
+            return jsonify({'errorAll':'nicht alle Felder ausgefüllt'})
+
+
         if not requestdata('Passwort') == requestdata('Passwort2'):
-            print('error')
-            return jsonify({'message':'Passwörter stimmen nicht überein'})
+            return jsonify({'errorPasswort':'Passwörter stimmen nicht überein'})
 
         isuserexisting = db.session.query(Users).filter(Users.username==requestdata('Benutzername')).first()
         if not isuserexisting:
-            return jsonify({'message':'Benutzer existiert nicht'})
-            #newuser = Users(username, email, firstname, name, password)
+            newuser = Users(username=requestdata('Benutzername'), email=requestdata('Mail'), firstname=requestdata('Vorname'), name=requestdata('Name'), password=requestdata('Passwort'))
+            db.session.add(newuser)
+            db.session.commit()
+            return jsonify({'message':'erfolgreich'})
 
-        ##### Noch erstellen das wenn Anfrage leer ist error
+       
             
-        return jsonify({'message':'Benutzername bereits vergeben'})
-    return jsonify({'message':'test'})
+        return jsonify({'errorBenutzername':'Benutzername bereits in Verwendung'})
+    return jsonify({'message':''})
 
 @views.route('/api/test/')
 @token_required
