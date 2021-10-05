@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:testapp/pages/signup/sign_up.dart';
 import 'package:testapp/pages/home/home.dart';
+import 'package:testapp/pages/konto/konto.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -41,7 +42,9 @@ class MyApp extends StatelessWidget {
       routes: {
         'home': (context) => Home(),
         'login': (context) => Login(),
-        'signup': (context) => Signup()
+        'signup': (context) => Signup(),
+        'navigation': (context) => Navigation(),
+        'konto': (context) => Konto(),
       },
     );
   }
@@ -208,5 +211,5 @@ login(context, data) async {
 writeToken(context, result) async {
   Map<String, dynamic> resultToJson = json.decode(result.body);
   await storage.write(key: 'token', value: resultToJson['token']);
-  Navigator.pushReplacementNamed(context, 'home');
+  Navigator.pushReplacementNamed(context, 'navigation');
 }
