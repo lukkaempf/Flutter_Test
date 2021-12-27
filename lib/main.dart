@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:testapp/pages/signup/sign_up.dart';
 import 'package:testapp/pages/home/home.dart';
 import 'package:testapp/pages/konto/konto.dart';
+import 'package:testapp/constants/api_path.dart';
+import 'package:testapp/pages/society/society.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -38,13 +40,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Home(),
+      home: Navigation(),
       routes: {
         'home': (context) => Home(),
         'login': (context) => Login(),
         'signup': (context) => Signup(),
         'navigation': (context) => Navigation(),
         'konto': (context) => Konto(),
+        'society': (context) => Society(),
       },
     );
   }
@@ -198,7 +201,8 @@ class _LoginState extends State<Login> {
 }
 
 login(context, data) async {
-  var url = Uri.parse('http://10.0.2.2:5000/api/login');
+  print(constantUrl + 'login');
+  var url = Uri.parse(constantUrl + 'login');
   var result = await http.post(url, body: data);
   if (result.statusCode != 200) {
     return json.decode(result.body);
